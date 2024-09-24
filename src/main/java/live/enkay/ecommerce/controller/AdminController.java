@@ -1,9 +1,6 @@
 package live.enkay.ecommerce.controller;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
@@ -19,6 +16,7 @@ import live.enkay.ecommerce.dto.ProductDTO;
 import live.enkay.ecommerce.model.Category;
 import live.enkay.ecommerce.model.Product;
 import live.enkay.ecommerce.service.CategoryService;
+import live.enkay.ecommerce.service.CloudinaryService;
 import live.enkay.ecommerce.service.ProductService;
 import lombok.RequiredArgsConstructor;
 
@@ -28,8 +26,7 @@ public class AdminController {
   // -- CATEGORY SECTION
   private final CategoryService categoryService;
   private final ProductService productService;
-
-  private String uploadDirectory = System.getProperty("user.dir") + "/src/main/resources/static/productImages";
+  private final CloudinaryService cloudinaryService;
 
   @GetMapping("/admin")
   public String adminHome() {
@@ -88,7 +85,8 @@ public class AdminController {
 
   @PostMapping("/admin/products/add")
   public String postAddProduct(@ModelAttribute("productDTO") ProductDTO productDTO,
-      @RequestParam("productImage") MultipartFile file, @RequestParam("imgName") String imgName) throws IOException {
+      @RequestParam("productImage") MultipartFile file, @RequestParam("imageName") String imageName)
+      throws IOException {
 
     Product product = new Product();
     product.setId(productDTO.getId());
@@ -99,22 +97,16 @@ public class AdminController {
     product.setDescription(productDTO.getDescription());
 
     String imageUUID;
-    if (!file.isEmpty()) {
-      imageUUID = file.getOriginalFilename();
-      Path fileNameAndPath = Paths.get(uploadDirectory, imageUUID);
-      Files.write(fileNameAndPath, file.getBytes());
+
+    if (file.isEmpty()) {
+      imageUUID = imageName;
     } else {
-      imageUUID = imgName;
+      imageUUID = cloudinaryService.uploadFile(file);
     }
+
     product.setImageName(imageUUID);
 
     productService.addProduct(product);
-
-    try {
-      Thread.sleep(1000);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
 
     return "redirect:/admin/products";
   }
@@ -122,9 +114,9 @@ public class AdminController {
   @GetMapping("/admin/products/delete/{id}")
   public String deleteProduct(@PathVariable long id) {
     String imageName = productService.getProductById(id).get().getImageName();
-    Path fileNameAndPath = Paths.get(uploadDirectory, imageName);
+
     try {
-      Files.delete(fileNameAndPath);
+      cloudinaryService.deleteFile(imageName);
     } catch (IOException e) {
       e.printStackTrace();
     }
