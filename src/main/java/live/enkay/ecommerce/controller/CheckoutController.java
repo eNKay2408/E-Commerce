@@ -53,8 +53,8 @@ public class CheckoutController {
 
     SessionCreateParams params = SessionCreateParams.builder()
         .setMode(SessionCreateParams.Mode.PAYMENT)
-        .setSuccessUrl("http://localhost:8080/checkout/success")
-        .setCancelUrl("http://localhost:8080/")
+        .setSuccessUrl("https://e-commerce.enkay.live/checkout/success")
+        .setCancelUrl("https://e-commerce.enkay.live")
         .addAllLineItem(lineItems)
         .setShippingAddressCollection(
             ShippingAddressCollection.builder()
