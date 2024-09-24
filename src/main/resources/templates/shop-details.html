@@ -23,7 +23,7 @@
 			integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ"
 			crossorigin="anonymous"
 		/>
-		<link rel="icon" th:href="@{/images/logo.png}" />
+		<link rel="icon" th:href="@{/images/icon.png}" />
 		<title>Details</title>
 	</head>
 	<body>
@@ -81,7 +81,7 @@
 						height="300px"
 						width="300px"
 						style="object-fit: cover"
-						th:src="@{${'/productImages/' + product.imageName}}"
+						th:src="@{${product.imageName}}"
 						alt="Product Image"
 					/>
 				</div>

@@ -21,7 +21,7 @@
 			rel="stylesheet"
 			href="https://use.fontawesome.com/releases/v5.11.2/css/all.css"
 		/>
-		<link rel="icon" th:href="@{/images/logo.png}" />
+		<link rel="icon" th:href="@{/images/icon.png}" />
 		<title>Cart</title>
 	</head>
 	<body>
@@ -87,7 +87,7 @@
 										<img
 											height="100px"
 											width="100px"
-											th:src="@{${'/productImages/' + product.imageName}}"
+											th:src="@{${product.imageName}}"
 											alt="Product Image"
 										/>
 									</div>

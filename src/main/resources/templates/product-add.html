@@ -19,7 +19,7 @@
 			integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ"
 			crossorigin="anonymous"
 		/>
-		<link rel="icon" th:href="@{/images/logo.png}" />
+		<link rel="icon" th:href="@{/images/icon.png}" />
 		<title>Product</title>
 	</head>
 	<body>
@@ -142,8 +142,8 @@
 					</div>
 
 					<div class="col-sm-5 mr-auto">
-						<p>Image</p>
-						<div class="custom-file">
+						<div class="form-group">
+							<label for="productImage">Image</label>
 							<input
 								type="file"
 								class="custom-file-input"
@@ -157,27 +157,27 @@
 						</div>
 
 						<img
-							id="imgPreview"
+							id="imgPreview-large"
 							height="340px"
 							width="340px"
 							style="object-fit: cover"
-							th:src="@{${productDTO.imageName != null ? '/productImages/' + productDTO.imageName : '/images/default-image.png'}}"
+							th:src="@{${productDTO.imageName != null ? productDTO.imageName : '/images/default-image.png'}}"
 							alt="Product Image"
 							class="my-3 d-none d-sm-inline-block"
 						/>
 						<img
-							id="imgPreview"
+							id="imgPreview-small"
 							height="200px"
 							width="200px"
 							style="object-fit: cover"
-							th:src="@{${productDTO.imageName != null ? '/productImages/' + productDTO.imageName : '/images/default-image.png'}}"
+							th:src="@{${productDTO.imageName != null ? productDTO.imageName : '/images/default-image.png'}}"
 							alt="Product Image"
 							class="my-3 d-inline-block d-sm-none"
 						/>
 
 						<input
 							type="hidden"
-							name="imgName"
+							name="imageName"
 							th:value="${productDTO.imageName}"
 						/>
 
@@ -214,10 +214,11 @@
 			function readURL(input) {
 				if (input.files && input.files[0]) {
 					var reader = new FileReader();
-					reader.onload = function (e) {
-						$("#imgPreview").attr("src", e.target.result);
-					};
 					reader.readAsDataURL(input.files[0]);
+					reader.onload = function (e) {
+						$("#imgPreview-small").attr("src", e.target.result);
+						$("#imgPreview-large").attr("src", e.target.result);
+					};
 				}
 			}
 			$("#productImage").change(function () {
@@ -225,10 +226,7 @@
 			});
 			$(".custom-file-input").on("change", function () {
 				var fileName = $(this).val().split("\\").pop();
-				$(this)
-					.siblings(".custom-file-label")
-					.addClass("selected")
-					.html(fileName);
+				$(this).siblings(".custom-file-label").html(fileName);
 			});
 		</script>
 	</body>
