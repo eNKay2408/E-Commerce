@@ -1,0 +1,40 @@
+services:
+  app:
+    depends_on:
+      - db
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: e-commerce
+    restart: always
+    ports:
+      - 8080:8080
+    env_file:
+      - .env
+    environment:
+      - DB_USERNAME=enkay
+      - DB_PASSWORD=2408
+      - DB_URL=jdbc:mysql://db:3306/ecommerce
+    develop:
+      watch:
+        - path: ./src
+          target: /app/src
+          action: sync+restart
+        - path: ./pom.xml
+          action: rebuild
+
+  db:
+    image: mysql
+    restart: always
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_DATABASE=ecommerce
+      - MYSQL_USER=enkay
+      - MYSQL_PASSWORD=2408
+    volumes:
+      - db-data:/var/lib/mysql
+    ports:
+      - 3306:3306
+
+volumes:
+  db-data:

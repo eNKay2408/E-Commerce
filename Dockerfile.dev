@@ -1,0 +1,26 @@
+FROM openjdk:17-jdk-alpine
+
+WORKDIR /app
+
+COPY .mvn .mvn
+COPY mvnw pom.xml ./
+
+RUN addgroup app && adduser -S -G app app
+RUN chown -R app:app /app
+
+USER app
+
+RUN ./mvnw dependency:go-offline
+
+COPY src ./src
+COPY .env ./
+
+USER root
+
+RUN chown -R app:app /app
+
+USER app
+
+EXPOSE 8080
+
+ENTRYPOINT [ "./mvnw", "spring-boot:run" ]

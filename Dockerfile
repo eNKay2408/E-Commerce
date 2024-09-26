@@ -1,29 +1,17 @@
-FROM maven:3.8-openjdk-17-slim AS build
-
-WORKDIR /app
-
-COPY pom.xml .
-RUN mvn dependency:go-offline
-
-COPY src ./src
-RUN mvn package -DskipTests
-
 FROM openjdk:17-jdk-alpine
 
 WORKDIR /app
 
 COPY .env .
 
-ARG JAR_FILE=/app/target/*.jar
-
-COPY --from=build ${JAR_FILE} app.jar
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} app.jar
 
 RUN addgroup app && adduser -S -G app app
-
-RUN chown app:app ./app.jar
+RUN chown -R app:app /app
 
 USER app
 
 EXPOSE 8080
 
-CMD [ "java", "-jar", "app.jar" ]
+ENTRYPOINT [ "java", "-jar", "app.jar" ]
