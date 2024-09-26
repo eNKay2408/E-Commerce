@@ -5,57 +5,56 @@ pipeline {
     pollSCM "* * * * *"
   }
 
-  environment {
-    DOCKERHUB=credentials("DOCKERHUB_ACCESS")
-    EC2_IP=credentials("EC2_IP")
-    IMAGE_NAME="enkay2408/ecommerce"
+  tools {
+    maven "3.9"
+  }
 
-    DB=credentials("JAVA_DB_ACCESS")
-    DB_URL=credentials("JAVA_DB_URL")
-    GOOGLE_CLIENT=credentials("JAVA_GOOGLE_SECRET")
-    STRIPE_SECRET_KEY=credentials("JAVA_STRIPE_SECRET")
-    JWT_SECRET=credentials("JAVA_JWT_SECRET")
-    CLOUDINARY_NAME=credentials("JAVA_CLOUDINARY_NAME")
-    CLOUDINARY_API=credentials("JAVA_CLOUDINARY_SECRET")
+  environment {
+    EC2_HOST_IP=credentials("ec2-host-ip")
+    EC2_SSH_KEY=credentials("ec2-ssh-key")
+    EC2_USER="ec2-user"
+
+    DOCKERHUB=credentials("dockerhub-access")
+    IMAGE="enkay2408/e-commerce"
+    CONTAINER="e-commerce"
+
+    SPRING_ENV_FILE=credentials("spring-env-file")
   }
 
   stages {
     stage("Create .env file") {
       steps {
-        sh '''
-          echo "DB_USERNAME=$DB_USR" >> .env
-          echo "DB_PASSWORD=$DB_PSW" >> .env
-          echo "DB_URL=$DB_URL" >> .env
-          echo "GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_USR" >> .env
-          echo "GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_PSW" >> .env
-          echo "STRIPE_SECRET_KEY=$STRIPE_SECRET_KEY" >> .env
-          echo "JWT_SECRET=$JWT_SECRET" >> .env
-          echo "CLOUDINARY_CLOUD_NAME=$CLOUDINARY_NAME" >> .env
-          echo "CLOUDINARY_API_KEY=$CLOUDINARY_API_USR" >> .env
-          echo "CLOUDINARY_API_SECRET=$CLOUDINARY_API_PSW" >> .env
-        '''
+        sh """
+          cp $SPRING_ENV_FILE .env
+          chmod 600 .env
+        """
+      }
+    }
+
+    stage("Build app") {
+      steps {
+        sh "mvn dependency:go-offline"
+        sh "mvn clean package -DskipTests"
       }
     }
 
     stage("Build Docker Image") {
       steps {
         sh "docker login -u $DOCKERHUB_USR -p $DOCKERHUB_PSW"
-        sh "docker build -t $IMAGE_NAME ."
-        sh "docker push $IMAGE_NAME"
+        sh "docker build -t $IMAGE ."
+        sh "docker push $IMAGE"
       }
     }
 
     stage("Deploy to EC2") {
       steps {
-        sshagent(credentials: ["EC2_SSH"]) {
-          sh """
-            ssh -o StrictHostKeyChecking=no ec2-user@$EC2_IP '
-              docker rm -f ecommerce || true
-              docker rmi $IMAGE_NAME || true
-              docker run -dp 8080:8080 --name ecommerce $IMAGE_NAME
-            '
-          """
-        }
+        sh """
+          ssh -o StrictHostKeyChecking=no -i $EC2_SSH_KEY $EC2_USER@$EC2_HOST_IP '
+            docker rm -f $CONTAINER || true
+            docker rmi $IMAGE || true
+            docker run -dp 8080:8080 --name $CONTAINER $IMAGE
+          '
+        """
       }
     }
   }
