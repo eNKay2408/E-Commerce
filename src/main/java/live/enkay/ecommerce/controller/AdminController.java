@@ -113,13 +113,13 @@ public class AdminController {
 
   @GetMapping("/admin/products/delete/{id}")
   public String deleteProduct(@PathVariable long id) {
-    String imageName = productService.getProductById(id).get().getImageName();
 
-    try {
-      cloudinaryService.deleteFile(imageName);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    // String imageName = productService.getProductById(id).get().getImageName();
+    // try {
+    // cloudinaryService.deleteFile(imageName);
+    // } catch (IOException e) {
+    // e.printStackTrace();
+    // }
 
     productService.deleteProductById(id);
 
