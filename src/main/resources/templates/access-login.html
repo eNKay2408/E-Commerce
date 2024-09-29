@@ -76,6 +76,12 @@
 						Don't have an account?
 						<a class="linkControl" th:href="@{/register}">Register here</a>
 					</p>
+					<p class="text-muted">
+						<!-- Login with admin user -->
+						Admin Email: <strong>admin@enkay.live</strong>
+						<br />
+						Password: <strong>password</strong>
+					</p>
 					<form th:action="@{/login}" method="post" id="login-form">
 						<div class="form-group">
 							<label for="email">Email</label>
