@@ -18,7 +18,7 @@
 
   <img width="595px" src="https://res.cloudinary.com/dvzhmi7a9/image/upload/v1727361252/ECommerce/Screenshot/3-Home.png">
 
-  [![Live Demo](https://img.shields.io/badge/🔗_Visit_website-black?style=flat)](https://e-commerce.enkay.live)
+  [![Live Demo](https://img.shields.io/badge/🔗_Visit_website-white?style=flat)](https://e-commerce.enkay.live)
 
 </div>
 
@@ -139,7 +139,7 @@ cd E-Commerce
 #### 4. See the changes reflected in real-time:
 - Open [http://localhost:8080](http://localhost:8080) to view the application in the browser.
 
-### 🔄 CI/CD
+### 🔄 CI/CD - Jenkins
 
 #### 1. Create Github repository and add remote URL to the local repository.
 
