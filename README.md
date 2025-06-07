@@ -18,7 +18,7 @@
 
   <img width="595px" src="https://res.cloudinary.com/dvzhmi7a9/image/upload/v1727361252/ECommerce/Screenshot/3-Home.png">
 
-  [![Live Demo](https://img.shields.io/badge/🔗_Visit_website-white?style=flat)](https://e-commerce.enkay.live)
+  [![Live Demo](https://img.shields.io/badge/🔗_Visit_website-white?style=flat)](https://e-commerce.enkay.tech)
 
 </div>
 
@@ -252,6 +252,6 @@ cd E-Commerce
 ## 🌐 <a name="contact">Contact</a>
 
 - **Name:** Nguyen Phan Duc Khai - **eNKay**
-- **Portfolio:** [enkay.live](https://enkay.live)
+- **Portfolio:** [enkay.tech](https://enkay.tech)
 - **LinkedIn:** [en-kay](https://www.linkedin.com/in/en-kay/)
 - **Email:** [enkay.work@outlook.com](mailto:enkay.work@outlook.com)
